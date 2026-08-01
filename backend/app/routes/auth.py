@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPExecption
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
@@ -22,12 +22,12 @@ def register(user: UserRegister, db: Session = Depends(get_db)):
     existing_email = db.query(User).filter(User.email == user.email).first()
 
     if existing_email:
-        raise HTTPExecption(status_code=400, detail="Email already exists")
+        raise HTTPException(status_code=400, detail="Email already exists")
 
     existing_username = db.query(User).filter(User.username == user.username).first()
 
     if existing_username:
-        raise HTTPExecption(status_code=400, detail="User name already exists")
+        raise HTTPException(status_code=400, detail="User name already exists")
 
     db_user = User(
         username=user.username,
