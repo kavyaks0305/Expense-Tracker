@@ -5,13 +5,25 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.scss";
 import App from "./App.tsx";
 import Login from "./components/Login.tsx";
+import Register from "./components/Register.tsx";
+import Transactions from "./components/Transactions.tsx";
+import Dashboard from "./components/Dashboard.tsx";
+import MainLayout from "./components/MainLayout.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Routes with Sidebar */}
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/transactions" element={<Transactions />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>,

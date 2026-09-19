@@ -4,6 +4,7 @@ import uvicorn
 from app.database import Base, engine
 from app.models.user import User
 from app.routes.auth import router as auth_router
+from app.routes.transactions import router as transactions_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -18,7 +19,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
-
+app.include_router(transactions_router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
