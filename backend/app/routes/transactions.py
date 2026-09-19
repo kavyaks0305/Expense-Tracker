@@ -49,7 +49,7 @@ from math import ceil
 @router.get("", response_model=TransactionsListResponse)
 def getTransactions(
     page: int = 1,
-    pageSize: int = 20,
+    pageSize: int = 10,
     search: str | None = None,
     category: str | None = None,
     date_from: Date | None = None,

@@ -12,8 +12,9 @@ export interface TableProps<T extends object> {
   enableRowSelection?: boolean;
   sorting?: SortingState;
   className?: string;
+  hasMore?: boolean;
 
   onRowSelectionChange?: (rows: RowSelectionState) => void;
   onSortingChange?: (sorting: SortingState) => void;
-
+  onLoadMore?: () => void;
 }

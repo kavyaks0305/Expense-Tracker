@@ -1,0 +1,13 @@
+.recent-transactions {
+  &-container {
+    padding-inline: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 15px;
+}
