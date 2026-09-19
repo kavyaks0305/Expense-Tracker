@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { addTransaction, getTransactions } from "../api/transactions";
 import Table from "./table/Table";
+
+import "./Transactions.scss";
+
+import BasicCard from "./card/TransactionCard";
 
 const columns = [
   {
@@ -35,47 +39,69 @@ const columns = [
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  const getlist = async () => {
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const getlist = async (pageNumber = 1) => {
     try {
-      const a = await getTransactions({});
+      setLoading(true);
 
-      console.log(a);
+      const response = await getTransactions({
+        page: pageNumber,
+      });
 
-      // setTransactions()
-    } catch (e) {
-      console.log(e);
+      setTransactions((previous) =>
+        pageNumber === 1 ? response.items : [...previous, ...response.items],
+      );
+
+      setHasMore(response.items.length === 20);
+      setPage(pageNumber + 1);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const add = () => {
-    // transactions.forEach((item) => {
-    //   const payload = {
-    //     date: item.date,
-    //     type: item.type,
-    //     name: item.name,
-    //     note: item.remarks,
-    //     amount: item.amount,
-    //     paymentMethod: item.paymentMethod,
-    //     category: item.category,
-    //   };
-    //   addTransaction(payload);
-    // });
+  useEffect(() => {
+    getlist(1);
+  }, []);
+
+  const loadMore = () => {
+    const scrollElement = parentRef.current;
+    if (!scrollElement) return;
+
+    const scrollPoint = scrollElement?.scrollTop + scrollElement.offsetHeight;
+
+    const isBottomOfWindow =
+      Math.round(scrollPoint) >= scrollElement.scrollHeight;
+
+    if (isBottomOfWindow) {
+      getlist(page);
+    }
   };
 
   return (
-    <div className="table-contanier">
-      <button onClick={getlist}>Add</button>
-      <Table
-        columns={columns}
-        data={transactions}
-        pageSize={20}
-        rowHeight={42}
-        selectable
-        sortable
-        virtualized
-        infiniteScroll
-      />
+    <div className="table-container">
+      <div className="cards" onScroll={loadMore} ref={parentRef}>
+        <Table
+          columns={columns}
+          data={transactions}
+          pageSize={20}
+          rowHeight={42}
+          selectable
+          sortable
+          virtualized
+          infiniteScroll
+          loading={loading}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+        />  
+      </div>
+      {/*  */}
     </div>
   );
 }

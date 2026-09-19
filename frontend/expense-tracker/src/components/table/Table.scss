@@ -1,49 +1,88 @@
 .table {
-  width:90vw;
-  overflow: auto;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   background-color: #659287;
   color: black;
-  height: 90vh;
 }
 
-table {
+/* ================= HEADER ================= */
+
+.table-header {
+  display: grid;
   width: 100%;
-  // border-collapse: collapse;
-}
+  flex-shrink: 0;
 
-thead {
-  position: sticky;
-  top: 0;
   background: white;
-  z-index: 2;
+  border-bottom: 1px solid #ddd;
 }
 
-th,
-td {
-  padding: 12px;
-  border-bottom: 1px solid #ececec;
-  text-align: left;
-}
-
-th {
+.table-header-cell {
+  padding: 10px 12px;
+  font-weight: 600;
+  box-sizing: border-box;
   cursor: pointer;
-  user-select: none;
 }
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 4px;
+  
 }
 
-tbody tr:hover {
+/* ================= BODY ================= */
+
+.table-body {
+  height: 80vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  position: relative;
+}
+
+/* ================= ROWS ================= */
+
+.table-rows {
+  width: 100%;
+  position: relative;
+}
+
+.table-row {
+  display: grid;
+
+  min-height: 42px;
+
+  border-bottom: 1px solid #eee;
+  box-sizing: border-box;
+
+  width: 100%;
+}
+
+.table-row:hover {
   background: #f8f8f8;
 }
 
-.loading,
-.empty {
+.table-cell {
+  padding: 10px 12px;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ================= STATES ================= */
+
+.table-loading {
+  padding: 16px;
   text-align: center;
-  padding: 40px;
+}
+
+.empty {
+  padding: 30px;
+  text-align: center;
 }

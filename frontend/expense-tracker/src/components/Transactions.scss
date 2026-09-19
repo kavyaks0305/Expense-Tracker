@@ -1,0 +1,15 @@
+.table-container {
+  padding: 20px;
+  // background-color: #659287;
+  // width: 100%;
+}
+
+.cards {
+  max-height: 80vh;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.card {
+  margin-block: 10px;
+}
