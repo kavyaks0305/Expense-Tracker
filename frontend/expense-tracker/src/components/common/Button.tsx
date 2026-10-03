@@ -12,6 +12,7 @@ function CommonButton(props: any) {
         textTransform: "none",
       }}
       {...props}
+      className={props.isIcon ? "" : "complete"}
     />
   );
 }

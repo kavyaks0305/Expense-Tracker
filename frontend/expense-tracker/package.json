@@ -19,6 +19,7 @@
     "@rollup/plugin-replace": "^6.0.3",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.14.10",
+    "ag-grid-react": "^36.2.0",
     "axios": "^1.19.0",
     "dayjs": "^1.11.21",
     "notistack": "^3.0.2",
