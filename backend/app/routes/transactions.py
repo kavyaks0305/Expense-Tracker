@@ -49,7 +49,7 @@ from math import ceil
 @router.get("", response_model=TransactionsListResponse)
 def getTransactions(
     page: int = 1,
-    pageSize: int = 10,
+    pageSize: int = 20,
     search: str | None = None,
     category: str | None = None,
     date_from: Date | None = None,
@@ -79,7 +79,9 @@ def getTransactions(
     # Pagination
     offset = (page - 1) * pageSize
 
-    transactions = query.offset(offset).limit(pageSize).all()
+    transactions = (
+        query.order_by(Transaction.date.desc()).offset(offset).limit(pageSize).all()
+    )
 
     total_pages = ceil(total / pageSize) if total > 0 else 0
 

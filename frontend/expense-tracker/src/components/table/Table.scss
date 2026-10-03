@@ -28,13 +28,12 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  
 }
 
 /* ================= BODY ================= */
 
 .table-body {
-  height: 80vh;
+  height: 75vh;
   overflow-y: auto;
   overflow-x: auto;
   position: relative;
@@ -61,19 +60,35 @@
 .table-row:hover {
   background: #f8f8f8;
 }
-
 .table-cell {
   padding: 10px 12px;
 
   display: flex;
+
   align-items: center;
 
   box-sizing: border-box;
 
   overflow: hidden;
+
   text-overflow: ellipsis;
+
   white-space: nowrap;
+
+  min-width: 0;
 }
+// .table-cell {
+//   padding: 10px 12px;
+
+//   display: flex;
+//   align-items: center;
+
+//   box-sizing: border-box;
+
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
 
 /* ================= STATES ================= */
 
