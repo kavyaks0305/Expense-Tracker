@@ -8,8 +8,8 @@ export const editTransaction = async (id: string, payload: any) => {
   await api.patch(`/transactions/${id}`, payload);
 };
 
-export const removeTransaction = async (id: string, payload: any) => {
-  await api.delete(`/transactions/${id}`, payload);
+export const deleteTransaction = async (id: string) => {
+  await api.delete(`/transactions/${id}`);
 };
 
 export const getTransactions = async (params?: any) => {

@@ -1,18 +1,27 @@
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AllCommunityModule } from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
-import { useCallback, useMemo, useState } from "react";
-import { getTransactions } from "../api/transactions";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ModeEdit from "@mui/icons-material/ModeEdit";
+import { useQueryClient } from "@tanstack/react-query";
 
-import "./Transactions.scss";
+import ActionCell from "./ActionCell";
+
+import { getTransactions } from "../api/transactions";
 import CommonButton from "./common/Button";
-import { useNavigate } from "react-router-dom";
-import { IconButton } from "@mui/material";
+import "./Transactions.scss";
+import { useDeleteTransaction } from "../queries/useTransactions";
 
 const modules = [AllCommunityModule];
 
-export default function AggridTable() {
+export default function Transactions() {
+  const [loading, setLoading] = useState(false);
+
+  const gridApiRef = useRef<any>(null);
+
+  const queryClient = useQueryClient();
+  const deleteMutation = useDeleteTransaction();
+  const navigate = useNavigate();
+
   const colDefs = useMemo(
     () => [
       { field: "date" },
@@ -34,90 +43,77 @@ export default function AggridTable() {
           const transaction = params.data;
 
           return (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                height: "100%",
-              }}
-            >
-              <IconButton
-                color="gray"
-                aria-label="add an alarm"
-                onClick={() => handleEdit(transaction)}
-              >
-                <ModeEdit sx={{ fontSize: 20 }} />
-              </IconButton>
-
-              <IconButton
-                color="large"
-                aria-label="add an alarm"
-                onClick={() => handleDelete(transaction)}
-              >
-                <DeleteIcon sx={{ fontSize: 20 }} />
-              </IconButton>
-            </div>
+            <ActionCell
+              onDelete={() => handleDelete(transaction)}
+              onEdit={() => handleEdit(transaction)}
+            />
           );
         },
       },
     ],
     [],
   );
-  const [loading, setLoading] = useState(false);
+
+  const onGridReady = useCallback(
+    (params) => {
+      gridApiRef.current = params.api;
+      const dataSource = {
+        rowCount: undefined,
+
+        getRows: async (params) => {
+          const { startRow, endRow, successCallback, failCallback } = params;
+
+          try {
+            setLoading(true);
+
+            const pageSize = endRow - startRow;
+            const page = Math.floor(startRow / pageSize) + 1;
+
+            const response = await queryClient.fetchQuery({
+              queryKey: ["transactions", page, pageSize],
+              queryFn: () =>
+                getTransactions({
+                  page,
+                  pageSize: pageSize,
+                }),
+            });
+
+            const rows = response.items;
+
+            const lastRow =
+              response.total != null
+                ? response.total
+                : rows.length < pageSize
+                  ? startRow + rows.length
+                  : -1;
+
+            successCallback(rows, lastRow);
+          } catch (error) {
+            console.error("Failed to load transactions", error);
+            failCallback();
+          } finally {
+            setLoading(false);
+          }
+        },
+      };
+
+      params.api.setGridOption("datasource", dataSource);
+    },
+    [queryClient],
+  );
 
   const handleDelete = (transaction: any) => {
-    //todo
+    deleteMutation.mutate(transaction.id);
+    gridApiRef.current?.refreshInfiniteCache();
   };
 
   const handleEdit = (transcation: any) => {
     // todo
   };
 
-  const navigate = useNavigate();
-
   const onAddTransaction = () => {
     navigate("/transactions/add");
   };
-  const onGridReady = useCallback((params) => {
-    const dataSource = {
-      rowCount: undefined,
-
-      getRows: async (params) => {
-        const { startRow, endRow, successCallback, failCallback } = params;
-
-        try {
-          setLoading(true);
-
-          const pageSize = endRow - startRow;
-          const page = Math.floor(startRow / pageSize) + 1;
-
-          const response = await getTransactions({
-            page,
-            pageSize: pageSize,
-          });
-
-          const rows = response.items;
-
-          const lastRow =
-            response.total != null
-              ? response.total
-              : rows.length < pageSize
-                ? startRow + rows.length
-                : -1;
-
-          successCallback(rows, lastRow);
-        } catch (error) {
-          console.error("Failed to load transactions", error);
-          failCallback();
-        } finally {
-          setLoading(false);
-        }
-      },
-    };
-
-    params.api.setGridOption("datasource", dataSource);
-  }, []);
 
   return (
     <div>
@@ -134,8 +130,8 @@ export default function AggridTable() {
             cacheBlockSize={100}
             cacheOverflowSize={2}
             maxConcurrentDatasourceRequests={1}
-            infiniteInitialRowCount={1000}
-            maxBlocksInCache={50}
+            infiniteInitialRowCount={10}
+            maxBlocksInCache={10}
             onGridReady={onGridReady}
             loading={loading}
           />
