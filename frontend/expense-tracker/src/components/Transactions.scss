@@ -1,15 +1,17 @@
-.table-container {
-  padding: 20px;
-  // background-color: #659287;
-  // width: 100%;
-}
+.transactions {
+  padding: 40px;
+  &__title {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
 
-.cards {
-  max-height: 80vh;
-  overflow: hidden;
-  overflow-y: auto;
-}
+  &__table-container {
+    max-height: 80vh;
+    overflow: hidden;
+    overflow-y: auto;
+  }
 
-.card {
-  margin-block: 10px;
+  &__add-button {
+    margin-bottom: 20px;
+  }
 }

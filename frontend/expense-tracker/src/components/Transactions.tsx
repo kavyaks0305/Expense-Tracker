@@ -3,8 +3,8 @@ import { addTransaction, getTransactions } from "../api/transactions";
 import Table from "./table/Table";
 
 import "./Transactions.scss";
-
-import BasicCard from "./card/TransactionCard";
+import CommonButton from "./common/Button";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   {
@@ -35,6 +35,10 @@ const columns = [
     accessorKey: "note",
     header: "Note",
   },
+  {
+    accessorKey: "action",
+    header: "",
+  },
 ];
 
 export default function Transactions() {
@@ -42,6 +46,8 @@ export default function Transactions() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  const navigate = useNavigate();
 
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -57,7 +63,7 @@ export default function Transactions() {
         pageNumber === 1 ? response.items : [...previous, ...response.items],
       );
 
-      setHasMore(response.items.length === 20);
+      setHasMore(pageNumber < response.total_pages);
       setPage(pageNumber + 1);
     } catch (error) {
       console.error(error);
@@ -71,37 +77,29 @@ export default function Transactions() {
   }, []);
 
   const loadMore = () => {
-    const scrollElement = parentRef.current;
-    if (!scrollElement) return;
+    getlist(page);
+  };
 
-    const scrollPoint = scrollElement?.scrollTop + scrollElement.offsetHeight;
-
-    const isBottomOfWindow =
-      Math.round(scrollPoint) >= scrollElement.scrollHeight;
-
-    if (isBottomOfWindow) {
-      getlist(page);
-    }
+  const onAddTransaction = () => {
+    navigate("/transactions/add");
   };
 
   return (
-    <div className="table-container">
-      <div className="cards" onScroll={loadMore} ref={parentRef}>
+    <div className="transactions">
+      <div className="transactions__title">Transactions</div>
+      <div className="transactions__add-button">
+        <CommonButton onClick={onAddTransaction}> Add transaction</CommonButton>
+      </div>
+
+      <div className="transactions__table-container">
         <Table
           columns={columns}
           data={transactions}
-          pageSize={20}
-          rowHeight={42}
-          selectable
-          sortable
-          virtualized
-          infiniteScroll
           loading={loading}
           hasMore={hasMore}
           onLoadMore={loadMore}
-        />  
+        />
       </div>
-      {/*  */}
     </div>
   );
 }

@@ -14,6 +14,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 
 import { TableProps } from "./types";
 
+import TooltipCell from "./TooltipCell";
+
 function Table<T extends object>({
   data,
   columns,
@@ -111,7 +113,8 @@ function Table<T extends object>({
    */
   const gridTemplateColumns = table
     .getVisibleLeafColumns()
-    .map((column) => `${column.getSize()}px`)
+    // .map((column) => `${column.getSize()}px`)
+    .map(() => "minmax(0, 1fr)")
     .join(" ");
 
   return (
@@ -184,10 +187,16 @@ function Table<T extends object>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <div key={cell.id} className="table-cell">
-                      {flexRender(
+                      <TooltipCell>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TooltipCell>
+                      {/* {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
-                      )}
+                      )} */}
                     </div>
                   ))}
                 </div>

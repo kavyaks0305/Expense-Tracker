@@ -9,6 +9,7 @@ import Register from "./components/Register.tsx";
 import Transactions from "./components/Transactions.tsx";
 import Dashboard from "./components/Dashboard.tsx";
 import MainLayout from "./components/MainLayout.tsx";
+import TransactionForm from "./components/form/TransactionForm.tsx"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -18,6 +19,8 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        <Route path="/transactions/add" element={<TransactionForm />} />
 
         {/* Routes with Sidebar */}
         <Route element={<MainLayout />}>
