@@ -12,8 +12,9 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      await login({ email: email, password: password });
-
+      const res = await login({ email: email, password: password });
+      localStorage.setItem("access_token", res.data.access_token);
+      
       navigate("/dashboard");
     } catch (error) {
       console.log(error);

@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import Profile from "./Profile";
 
 import './Navigation.scss'
 
@@ -6,7 +7,7 @@ function Navigation() {
   return (
     <aside className="sidebar">
       <div className="user-container">
-        <div>user name</div>
+        <Profile/>
       </div>
 
       <nav>

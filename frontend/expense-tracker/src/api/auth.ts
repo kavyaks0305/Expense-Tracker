@@ -6,3 +6,11 @@ export const login = (data: LoginRequest) =>
 
 export const register = (data: RegisterRequest) =>
   api.post("/auth/register", data);
+
+export const getCurrentUser = () => {
+  const token = localStorage.getItem("access_token");
+
+  return api.get("/users/self", {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+};
