@@ -1,7 +1,10 @@
-// queries/useTransactions.ts
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addTransaction, deleteTransaction, editTransaction, getTransactions } from "../api/transactions";
+import {
+  addTransaction,
+  deleteTransaction,
+  editTransaction,
+  getTransactions,
+} from "../api/transactions";
 
 export const useGetTransactions = (page: number, pageSize = 100) => {
   return useQuery({

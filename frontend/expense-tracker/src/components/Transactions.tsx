@@ -102,9 +102,17 @@ export default function Transactions() {
     [queryClient],
   );
 
-  const handleDelete = (transaction: any) => {
-    deleteMutation.mutate(transaction.id);
-    gridApiRef.current?.refreshInfiniteCache();
+  const handleDelete = async (transaction: any) => {
+    try {
+      await deleteMutation.mutate(transaction.id);
+
+      gridApiRef.current?.applyTransaction({
+        remove: [{ id: transaction.id }],
+      });
+      gridApiRef.current?.refreshInfiniteCache();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleEdit = (transcation: any) => {
