@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "../api/auth";
+import { login, startLogoutTimer } from "../api/auth";
 import "./Login.scss";
 
 import { useNavigate } from "react-router-dom";
@@ -13,8 +13,12 @@ function Login() {
   const handleLogin = async () => {
     try {
       const res = await login({ email: email, password: password });
+
       localStorage.setItem("access_token", res.data.access_token);
+      localStorage.setItem("expires_in", res.data.expires_in.toString());
       
+      startLogoutTimer(res.data.expires_in);
+
       navigate("/dashboard");
     } catch (error) {
       console.log(error);

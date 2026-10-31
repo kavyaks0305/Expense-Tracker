@@ -14,3 +14,22 @@ export const getCurrentUser = () => {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 };
+
+let logoutTimer: ReturnType<typeof setTimeout>;
+
+export const logout = () => {
+  clearTimeout(logoutTimer);
+
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("expires_in");
+
+  window.location.href = "/login";
+};
+
+export const startLogoutTimer = (expiresIn: number) => {
+  clearTimeout(logoutTimer);
+
+  logoutTimer = setTimeout(() => {
+    logout();
+  }, expiresIn * 1000);
+};

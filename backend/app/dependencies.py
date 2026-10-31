@@ -24,17 +24,26 @@ def get_current_user(
 ):
     payload = verify_access_token(token)
 
-    if payload is None:
+    if not payload:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
+            status_code=401,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = db.query(User).filter(User.id == int(payload["sub"])).first()
+    user_id = payload.get("sub")
 
-    if user is None:
+    if not user_id:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
+            detail="Invalid token payload",
+        )
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
             detail="User not found",
         )
 
