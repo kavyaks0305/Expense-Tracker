@@ -1,0 +1,9 @@
+.profile-container {
+  display: flex;
+  align-items: center;
+
+  &__name {
+    margin-left: 10px;
+    color:black
+  }
+}

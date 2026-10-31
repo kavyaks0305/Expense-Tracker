@@ -1,5 +1,6 @@
 import { useState } from "react";
-import {  register } from "../api/auth";
+import { useNavigate } from "react-router-dom";
+import { register } from "../api/auth";
 import "./Login.scss";
 
 function Login() {
@@ -7,9 +8,16 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
 
-  const handleRegister = () => {
-    register({ username: name, password, email });
+  const handleRegister = async () => {
+    try {
+      await register({ username: name, password, email });
+
+      navigate("/login");
+    } catch (er) {
+      console.log(er);
+    }
   };
 
   return (
