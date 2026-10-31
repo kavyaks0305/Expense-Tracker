@@ -5,6 +5,7 @@ from app.database import Base, engine
 from app.models.user import User
 from app.routes.auth import router as auth_router
 from app.routes.transactions import router as transactions_router
+from app.routes.users import router as users_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -19,6 +20,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(users_router)
 app.include_router(transactions_router)
 
 if __name__ == "__main__":
