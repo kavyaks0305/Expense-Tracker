@@ -1,3 +1,4 @@
+from app.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -55,5 +56,8 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
 
     access_token = create_access_token(data={"sub": str(db_user.id)})
 
-
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+    }  # 30 minutes in seconds
