@@ -14,7 +14,7 @@ function Login() {
     try {
       await login({ email: email, password: password });
 
-      navigate("/home");
+      navigate("/dashboard");
     } catch (error) {
       console.log(error);
     }
