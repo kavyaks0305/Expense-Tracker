@@ -16,16 +16,16 @@ interface Props {
 
 export function AuthProvider({ children }: Props) {
   const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token"),
+    localStorage.getItem("access_token"),
   );
 
   function login(jwt: string) {
-    localStorage.setItem("token", jwt);
+    localStorage.setItem("access_token", jwt);
     setToken(jwt);
   }
 
   function logout() {
-    localStorage.removeItem("token");
+    localStorage.removeItem("access_token");
     setToken(null);
   }
 
