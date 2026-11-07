@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from app.database import Base
 
 
@@ -15,3 +15,9 @@ class Transaction(Base):
     # bank transfer | upi | credit card | debit card | cash
     paymentMethod = Column(String, index=True, nullable=False)
     note = Column(String, index=True)
+    
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=False
+    )

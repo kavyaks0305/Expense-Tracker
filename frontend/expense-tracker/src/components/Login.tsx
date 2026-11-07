@@ -14,10 +14,12 @@ function Login() {
     try {
       const res = await login({ email: email, password: password });
 
-      localStorage.setItem("access_token", res.data.access_token);
-      localStorage.setItem("expires_in", res.data.expires_in.toString());
-      
-      startLogoutTimer(res.data.expires_in);
+      const { access_token, expires_in } = res.data;
+      localStorage.setItem("access_token", access_token);
+
+      if (typeof expires_in === "number" && expires_in > 0) {
+        startLogoutTimer(expires_in);
+      }
 
       navigate("/dashboard");
     } catch (error) {

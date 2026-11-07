@@ -1,8 +1,9 @@
+from app.schemas.user import UserResponse
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import date as Date
 
-
+from app.dependencies import get_current_user
 from app.database import SessionLocal
 from app.models.transactions import Transaction
 from app.schemas.transactions import (
@@ -54,9 +55,10 @@ def getTransactions(
     category: str | None = None,
     date_from: Date | None = None,
     date_to: Date | None = None,
+    current_user: UserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    query = db.query(Transaction)
+    query = db.query(Transaction).filter(Transaction.user_id == current_user.id).all()
 
     # Search
     if search:
